@@ -17,12 +17,14 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import CurrencyBitcoinSharpIcon from '@mui/icons-material/CurrencyBitcoinSharp';
 
+import {WalletDetailsGridContext} from './Grid';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: alpha(theme.palette.common.white, 0.25),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.white, 0.35),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -52,14 +54,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '20ch',
+      width: '25ch',
     },
   },
 }));
+// Create wallet context
+export const WalletContext = React.createContext({
+  walletDetails: [], fetchWallet: () => {}
+})
 
 export default function PrimarySearchAppBar() {
+
+  // variable and set function for that variable
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null); 
+  const [walletAddress, setWalletAddress] = React.useState("");
+  const [walletDetails, setWalletDetails] = React.useState([]);
+
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -71,6 +82,38 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
+
+  // set the walletAddress variable
+  const handleOnInput = (event) => {
+    setWalletAddress(event.target.value)
+  };
+
+  // update the current address in backend
+  const handlePressEnter = (event) => {
+    if(event.key === "Enter"){
+      const newWalletAddress = {
+        "walletAddress": walletAddress
+      }
+      fetch("http://localhost:8000/wallets-set-address", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newWalletAddress)
+        }
+      )
+    }
+  }
+
+
+  //Get the Wallet Details using the walletAddress
+  const fetchWallet = async(walletAddress) => {
+    const response = await fetch("http://localhost:8000/wallets-set-address")
+    const wallet = await response.json()
+    setWalletDetails(wallet.walletDetails)
+  }
+  // Set the effect
+  React.useEffect((walletAddress) => {
+    fetchWallet(walletAddress)
+  },[])
 
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -190,7 +233,13 @@ export default function PrimarySearchAppBar() {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search Wallet address ... "
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ 
+                'aria-label': 'search',
+                min:"0",
+                 // Get the address
+              }}
+              onChange={handleOnInput}
+              onKeyDown={handlePressEnter}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
