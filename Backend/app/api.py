@@ -19,14 +19,21 @@ app.add_middleware(
 async def read_root() -> dict:
     return {"message": "Welcome to your todo list."}
 
-wallet_address = "bc1q6v32wx37has40meqc9ea4tasc27umsksukylh2"
+wallet_address = ["0"]
 # Wallets Details
 wallets = {
+    "": {
+        "Grid": {
+            "WalletAddress": "1",
+            "Balance": "",
+            "Value-in-USD": ""
+        }
+    },
     "bc1q6v32wx37has40meqc9ea4tasc27umsksukylh2": {
         "Grid": {
             "WalletAddress": "bc1q6v32wx37has40meqc9ea4tasc27umsksukylh2",
             "Balance": "3,827.73917861 BTC",
-            "Value-in-USD": "98,772,116.75 USD"
+            "Value_in_USD": "98,772,116.75 USD"
         }
     }
 }
@@ -34,11 +41,11 @@ wallets = {
 #Set Wallet Address
 @app.post("/wallets-set-address", tags=["wallet"])
 async def set_wallet(newWalletAddress: dict) -> str:
-    wallet_address = newWalletAddress["walletAddress"]
-    return "wallet address is set to:" + wallet_address
+    wallet_address.append(newWalletAddress["walletAddress"])
+    return ""
 
 #Get Corresponding Wallet Details
-@app.get("/wallets/{module}", tags=["wallet module"])
-async def get_wallet_module(module) -> dict:
-    return wallets[wallet_address][module]
+@app.get("/wallets", tags=["wallet module"])
+async def get_wallet():
+    return wallets[wallet_address[-1]]
 
