@@ -28,7 +28,6 @@ export default function Footer() {
             <GitHubIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <b>OUR REPOSITORY</b>
           </Typography>
           <Button color="inherit" href = "mailto:104193108@student.swin.edu.au">Contact Us</Button>
         </Toolbar>

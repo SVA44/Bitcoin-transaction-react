@@ -1,6 +1,6 @@
 import { createChart, ColorType, CrosshairMode } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
-import './chart_styling.css';
+
 
 export const ChartComponent = props => {
 	const {

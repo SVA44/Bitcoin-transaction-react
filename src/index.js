@@ -12,4 +12,8 @@ root.render(
   </React.StrictMode>
 );
 
+/* 
+    checking web info such as num of requests and 
+    performance related data for analysing web performance
+*/
 reportWebVitals();

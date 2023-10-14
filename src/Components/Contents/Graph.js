@@ -15,7 +15,7 @@ export const ChartComponent = props => {
 		} = {},
 	} = props;
 
-	const chartContainerRef = useRef();
+	const chartContainerRef = React.useRef();
 
 	useEffect(
 		() => {
