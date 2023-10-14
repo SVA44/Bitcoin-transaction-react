@@ -1,0 +1,13 @@
+.header {
+    background-color: #1a76d2;
+    color: white;
+}
+
+.hd-search-form {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    width: 10cm;
+    border-radius: 5px;
+    background-color: #5699dd;
+}
