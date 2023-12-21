@@ -15,17 +15,25 @@ export const WalletDetailsGridContext = React.createContext({
     props: []
 }
 )
-export default function ResponsiveGrid(props) {
+export default function ResponsiveGrid({url}) {
     
     /* Wallet Details Info */
     const [searchParams,] = useSearchParams();
-    const walletAddress = searchParams.get('q');
+
+    // Get the wallet address from search params
+    let walletAddress = searchParams.toString().slice(2)
 
     // Get the address balance from the database
     const [balance, setBalance] = useState([]);
     const getBalance = async () => {
-        const { data } = await axios.get(`http://localhost:8000/getBalance?q=${searchParams.get('q')}`);
-        setBalance(data);
+        try{
+            const { data } = await axios.get(`${url}/getBalance?q=${searchParams.get('q')}`);
+            setBalance(data);
+            console.log(data);
+        } catch(error) {
+            console.error("An error occurred:", error);
+        }
+        
     };
     useEffect(() => {
         getBalance();
@@ -42,13 +50,17 @@ export default function ResponsiveGrid(props) {
                             overflow: 'scroll' }}>
                     <Typography variant="h6"><b>Wallet Address:</b></Typography>
                     <Typography>
-                        {walletAddress} <br></br> <br></br>
-                        <b>Balance:</b> {balance} <br></br> <br></br>
+                        <div style={{ paddingBottom: '30px'}}>{walletAddress}</div>
+                        
+                        <div style={{ paddingBottom: '30px'}}><b>Balance:</b> {balance} </div>
+
                         <Paper elevation={13}
-                            style={{ padding: '30px',  
+                            style={{ paddingBottom: '120px',
                                 height: '35vh'}}>
                             <Typography>
+                                <Paper style={{ height: 50, marginBottom:0}}>
                                 <TableauTable/>
+                                </Paper>
                             </Typography>
                         </Paper>
                     </Typography>

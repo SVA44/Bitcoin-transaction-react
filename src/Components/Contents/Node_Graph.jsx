@@ -17,8 +17,10 @@ export default function Flow() {
   // Get transactions data from the backend
   const [data, setData] = useState([]);
   const getData = async () => {
+    try{
       const { data } = await axios.get(`http://localhost:8000/getTransactionsData?q=${searchParams.get('q')}`);
       setData(data);
+      console.log(data)
       const graphData = {
         "nodes":[
           {
@@ -29,6 +31,10 @@ export default function Flow() {
         ],
         "links":[]
       };
+    } catch(error) {
+      console.error(error);
+    }
+      
   };
   useEffect(() => {
       getData();
